@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Theer Tham Cafe — คาเฟ่ธาม</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,560;0,9..144,680;1,9..144,500&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F7EFE2;
+    --paper:#FFFBF4;
+    --espresso:#3A2A22;
+    --cocoa:#7A5C48;
+    --rose:#D98C8C;
+    --rose-deep:#B96363;
+    --matcha:#7E8F5E;
+    --matcha-deep:#5F6E43;
+    --gold:#C98F2B;
+    --line:#E4D5BE;
+    --shadow: rgba(58,42,34,0.14);
+    color-scheme: light;
+    box-sizing:border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --cream:#241811;
+      --paper:#2E2019;
+      --espresso:#F3E7D8;
+      --cocoa:#CDB49B;
+      --rose:#E39B9B;
+      --rose-deep:#EEB0B0;
+      --matcha:#9BB27C;
+      --matcha-deep:#B6CC97;
+      --gold:#E4B75B;
+      --line:#4A392E;
+      --shadow: rgba(0,0,0,0.4);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --cream:#241811;
+    --paper:#2E2019;
+    --espresso:#F3E7D8;
+    --cocoa:#CDB49B;
+    --rose:#E39B9B;
+    --rose-deep:#EEB0B0;
+    --matcha:#9BB27C;
+    --matcha-deep:#B6CC97;
+    --gold:#E4B75B;
+    --line:#4A392E;
+    --shadow: rgba(0,0,0,0.4);
+    color-scheme: dark;
+  }
+  html{ scroll-padding-top: env(safe-area-inset-top, 0px); }
+  html,body{ height:100%; }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--espresso);
+    font-family:"Public Sans", -apple-system, "Segoe UI", "Noto Sans Thai", sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--rose); color:var(--paper); }
+
+  .wrap{ max-width:1040px; margin:0 auto; padding:0 20px 90px; }
+
+  /* ---------- Header / signboard ---------- */
+  header.board{
+    padding: calc(28px + env(safe-area-inset-top,0px)) 20px 22px;
+    background: var(--espresso);
+    color: var(--cream);
+    position:relative;
+    overflow:hidden;
+  }
+  header.board .inner{
+    max-width:1040px; margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap;
+  }
+  .brand{ display:flex; align-items:center; gap:14px; }
+  .brand svg{ width:56px; height:56px; flex:none; }
+  .brand h1{
+    font-family:"Fraunces", "Iowan Old Style", Georgia, serif;
+    font-weight:560; font-size:clamp(1.5rem,4vw,2.1rem);
+    margin:0; letter-spacing:0.2px; line-height:1.05;
+  }
+  .brand p{ margin:4px 0 0; font-size:0.82rem; color:var(--rose); letter-spacing:0.3px; }
+  .board-right{ display:flex; align-items:center; gap:10px; }
+  .chip{
+    font-size:0.78rem; padding:7px 13px; border-radius:999px;
+    background:rgba(247,239,226,0.1); border:1px solid rgba(247,239,226,0.25);
+    color:var(--cream); display:flex; align-items:center; gap:6px; white-space:nowrap;
+  }
+  .chip b{ color:var(--gold); }
+
+  /* ---------- Nav ---------- */
+  nav.tabs{
+    position:sticky; top:0; z-index:20;
+    background:var(--paper);
+    border-bottom:1px solid var(--line);
+    overflow-x:auto;
+    -ms-overflow-style:none; scrollbar-width:none;
+  }
+  nav.tabs::-webkit-scrollbar{ display:none; }
+  nav.tabs .row{
+    max-width:1040px; margin:0 auto; display:flex; gap:2px; padding:0 12px;
+  }
+  nav.tabs button{
+    appearance:none; border:none; background:none; cursor:pointer;
+    font-family:inherit; font-size:0.86rem; font-weight:600; color:var(--cocoa);
+    padding:14px 14px 12px; white-space:nowrap; position:relative;
+    border-bottom:3px solid transparent;
+  }
+  nav.tabs button:hover{ color:var(--espresso); }
+  nav.tabs button.active{ color:var(--rose-deep); border-bottom-color:var(--rose); }
+  nav.tabs button:focus-visible{ outline:2px solid var(--matcha); outline-offset:2px; }
+
+  section.view{ display:none; padding-top:26px; }
+  section.view.active{ display:block; animation: rise 0.35s ease; }
+  @media (prefers-reduced-motion: reduce){ section.view.active{ animation:none; } }
+  @keyframes rise{ from{ opacity:0; transform:translateY(6px);} to{ opacity:1; transform:none;} }
+
+  h2.head{
+    font-family:"Fraunces", Georgia, serif; font-weight:560;
+    font-size:clamp(1.3rem,3vw,1.7rem); margin:0 0 4px;
+  }
+  .sub{ color:var(--cocoa); margin:0 0 20px; font-size:0.92rem; max-width:60ch; }
+
+  /* ---------- Product grid / ticket cards ---------- */
+  .grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; }
+  .card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:16px 16px 14px;
+    box-shadow: 3px 4px 0 var(--shadow);
+    display:flex; flex-direction:column; gap:8px;
+  }
+  .card .icon{ font-size:1.6rem; line-height:1; }
+  .card h3{ font-family:"Fraunces", Georgia, serif; font-weight:500; font-size:1.05rem; margin:0; }
+  .card .price{ font-weight:700; color:var(--rose-deep); font-size:0.98rem; }
+  .card .cat{ font-size:0.72rem; color:var(--cocoa); text-transform:lowercase; }
+  .qtyrow{ display:flex; align-items:center; gap:8px; margin-top:4px; }
+  .stepper{ display:flex; align-items:center; border:1px solid var(--line); border-radius:999px; overflow:hidden; }
+  .stepper button{
+    appearance:none; border:none; background:var(--cream); color:var(--espresso);
+    width:28px; height:28px; font-size:1rem; cursor:pointer; font-family:inherit;
+  }
+  .stepper span{ min-width:26px; text-align:center; font-size:0.88rem; font-weight:600; }
+  .btn{
+    appearance:none; border:none; cursor:pointer; font-family:inherit; font-weight:600;
+    border-radius:999px; padding:10px 16px; font-size:0.86rem;
+    background:var(--rose); color:#fff;
+  }
+  .btn:hover{ background:var(--rose-deep); }
+  .btn:focus-visible{ outline:2px solid var(--matcha); outline-offset:2px; }
+  .btn.ghost{ background:transparent; color:var(--espresso); border:1px solid var(--line); }
+  .btn.ghost:hover{ background:var(--cream); }
+  .btn.matcha{ background:var(--matcha); }
+  .btn.matcha:hover{ background:var(--matcha-deep); }
+  .btn.block{ width:100%; }
+  .btn:disabled{ opacity:0.45; cursor:not-allowed; }
+
+  /* ---------- Custom cake ---------- */
+  .builder{ display:grid; grid-template-columns:1.3fr 1fr; gap:26px; align-items:start; }
+  @media (max-width:760px){ .builder{ grid-template-columns:1fr; } }
+  fieldset{ border:none; padding:0; margin:0 0 20px; }
+  legend{ font-weight:700; font-size:0.88rem; margin-bottom:10px; padding:0; }
+  .opt-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:10px; }
+  label.opt{
+    border:1px solid var(--line); border-radius:10px; padding:12px; cursor:pointer;
+    display:flex; flex-direction:column; gap:2px; background:var(--paper);
+  }
+  label.opt:has(input:checked){ border-color:var(--rose); box-shadow: inset 0 0 0 1px var(--rose); background:color-mix(in srgb, var(--rose) 10%, var(--paper)); }
+  label.opt input{ margin:0 0 6px; accent-color:var(--rose); }
+  label.opt .oname{ font-weight:600; font-size:0.9rem; }
+  label.opt .oprice{ font-size:0.78rem; color:var(--cocoa); }
+  textarea, input[type=text], input[type=number]{
+    width:100%; font-family:inherit; font-size:0.92rem; padding:10px 12px;
+    border:1px solid var(--line); border-radius:8px; background:var(--paper); color:var(--espresso);
+  }
+  textarea:focus, input:focus{ outline:2px solid var(--matcha); outline-offset:1px; }
+
+  .preview-cake{
+    background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:20px;
+    text-align:center; position:sticky; top:70px;
+  }
+  .preview-cake svg{ width:150px; height:120px; }
+  .preview-cake .ptotal{ font-family:"Fraunces",serif; font-size:1.7rem; color:var(--rose-deep); margin:10px 0 2px; }
+  .preview-cake .pnote{ font-size:0.8rem; color:var(--cocoa); }
+
+  /* ---------- Cart ---------- */
+  .cart-row{
+    display:grid; grid-template-columns:1fr auto auto auto; gap:14px; align-items:center;
+    padding:14px 0; border-bottom:1px dashed var(--line);
+  }
+  .cart-row .name{ font-weight:600; font-size:0.94rem; }
+  .cart-row .unit{ font-size:0.78rem; color:var(--cocoa); }
+  .cart-row .line-total{ font-weight:700; min-width:80px; text-align:right; }
+  .remove{ background:none; border:none; color:var(--rose-deep); cursor:pointer; font-size:1.1rem; }
+  .empty{
+    padding:40px 20px; text-align:center; color:var(--cocoa); border:1px dashed var(--line); border-radius:12px;
+  }
+  .summary{ margin-top:18px; padding-top:14px; border-top:2px solid var(--espresso); }
+  .summary .row{ display:flex; justify-content:space-between; font-size:0.92rem; padding:4px 0; }
+  .summary .row.total{ font-weight:700; font-size:1.15rem; margin-top:6px; font-family:"Fraunces",serif; }
+
+  /* ---------- Member ---------- */
+  .member-card{
+    background:linear-gradient(135deg, var(--espresso), #241811);
+    color:var(--cream); border-radius:16px; padding:26px; max-width:420px;
+  }
+  .member-card .tier{ font-family:"Fraunces",serif; font-size:1.5rem; margin:2px 0 8px; }
+  .member-card .pts{ font-size:2rem; font-weight:700; color:var(--gold); }
+  .member-card .bar{ height:6px; background:rgba(247,239,226,0.18); border-radius:999px; margin:14px 0 6px; overflow:hidden; }
+  .member-card .bar i{ display:block; height:100%; background:var(--gold); }
+  .form-row{ max-width:380px; display:flex; flex-direction:column; gap:10px; }
+
+  /* ---------- Receipt ---------- */
+  .receipt{
+    background:var(--paper); max-width:340px; margin:0 auto; padding:22px 20px;
+    font-family:"Courier New", ui-monospace, monospace; font-size:0.83rem; color:var(--espresso);
+    border:1px solid var(--line);
+    box-shadow: 0 8px 0 -3px var(--paper), 0 8px 1px -3px var(--line);
+  }
+  .receipt h3{ text-align:center; font-family:"Fraunces",serif; font-size:1.1rem; margin:0 0 2px; }
+  .receipt .tag{ text-align:center; font-size:0.72rem; color:var(--cocoa); margin-bottom:12px; }
+  .receipt hr{ border:none; border-top:1px dashed var(--cocoa); margin:10px 0; }
+  .receipt .rrow{ display:flex; justify-content:space-between; margin:3px 0; }
+  .receipt .thanks{ text-align:center; margin-top:14px; font-size:0.8rem; }
+
+  /* ---------- Stats ---------- */
+  .stat-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:24px; }
+  .stat{ background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:18px; }
+  .stat .num{ font-family:"Fraunces",serif; font-size:1.8rem; color:var(--rose-deep); }
+  .stat .lbl{ font-size:0.78rem; color:var(--cocoa); margin-top:2px; }
+  .promo-list li{ margin-bottom:6px; }
+
+  /* ---------- Floating cart ---------- */
+  .fab{
+    position:fixed; right:18px; bottom: calc(18px + env(safe-area-inset-bottom,0px));
+    background:var(--espresso); color:var(--cream); border:none; border-radius:999px;
+    padding:13px 20px; font-family:inherit; font-weight:600; font-size:0.88rem;
+    display:flex; align-items:center; gap:8px; cursor:pointer; box-shadow:0 6px 18px var(--shadow); z-index:30;
+  }
+  .fab .count{
+    background:var(--rose); color:#fff; border-radius:999px; min-width:20px; height:20px; padding:0 5px;
+    display:flex; align-items:center; justify-content:center; font-size:0.72rem;
+  }
+  .toast{
+    position:fixed; left:50%; transform:translateX(-50%); bottom:calc(80px + env(safe-area-inset-bottom,0px));
+    background:var(--espresso); color:var(--cream); padding:10px 18px; border-radius:999px;
+    font-size:0.85rem; z-index:40; opacity:0; pointer-events:none; transition:opacity 0.25s, transform 0.25s;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(-6px); }
+
+  .msg-error{ color:var(--rose-deep); font-size:0.85rem; margin-top:4px; min-height:1.2em; }
+  .msg-ok{ color:var(--matcha-deep); font-size:0.85rem; margin-top:4px; }
+
+  .overflow-x{ overflow-x:auto; }
+  footer{ text-align:center; font-size:0.74rem; color:var(--cocoa); padding:34px 20px 10px; }
+</style>
+</head>
+<body>
+
+<header class="board">
+  <div class="inner">
+    <div class="brand">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <ellipse cx="32" cy="52" rx="24" ry="6" fill="#00000022"/>
+        <rect x="14" y="38" width="36" height="12" rx="2" fill="#D98C8C"/>
+        <rect x="16" y="26" width="32" height="12" rx="2" fill="#F3E7D8"/>
+        <rect x="18" y="16" width="28" height="10" rx="2" fill="#E39B9B"/>
+        <circle cx="32" cy="10" r="4" fill="#C98F2B"/>
+        <rect x="31" y="6" width="2" height="6" fill="#7E8F5E"/>
+      </svg>
+      <div>
+        <h1>Theer Tham Cafe</h1>
+        <p>คาเฟ่ธาม — cake &amp; bakery, made to order</p>
+      </div>
+    </div>
+    <div class="board-right">
+      <span class="chip" id="memberChip">👤 ยังไม่สมัครสมาชิก</span>
+      <span class="chip">🧾 ออเดอร์วันนี้ <b id="chipOrders">0</b></span>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="row" id="tabRow">
+    <button data-view="cakes" class="active">🍰 เค้ก</button>
+    <button data-view="drinks">🥤 เครื่องดื่ม</button>
+    <button data-view="custom">🎂 สร้างเค้กเอง</button>
+    <button data-view="best">⭐ ขายดี</button>
+    <button data-view="cart">🛒 ตะกร้า</button>
+    <button data-view="member">👤 สมาชิก</button>
+    <button data-view="checkout">💳 ชำระเงิน</button>
+    <button data-view="stats">📊 สถิติ</button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="view active" data-view="cakes">
+    <h2 class="head">เมนูเค้ก</h2>
+    <p class="sub">เลือกเค้กที่ชอบ กำหนดจำนวน แล้วกด “เพิ่มลงตะกร้า”</p>
+    <div class="grid" id="cakeGrid"></div>
+  </section>
+
+  <section class="view" data-view="drinks">
+    <h2 class="head">เมนูเครื่องดื่ม</h2>
+    <p class="sub">คู่หวานมันกับเค้กชิ้นโปรด</p>
+    <div class="grid" id="drinkGrid"></div>
+  </section>
+
+  <section class="view" data-view="custom">
+    <h2 class="head">สร้างเค้กของคุณเอง</h2>
+    <p class="sub">เลือกรสชาติ ขนาด ท็อปปิ้ง และข้อความบนหน้าเค้ก</p>
+    <div class="builder">
+      <div>
+        <fieldset>
+          <legend>รสชาติเนื้อเค้ก</legend>
+          <div class="opt-grid" id="flavorOpts"></div>
+        </fieldset>
+        <fieldset>
+          <legend>ขนาด</legend>
+          <div class="opt-grid" id="sizeOpts"></div>
+        </fieldset>
+        <fieldset>
+          <legend>ท็อปปิ้ง</legend>
+          <div class="opt-grid" id="toppingOpts"></div>
+        </fieldset>
+        <fieldset>
+          <legend>ข้อความบนหน้าเค้ก (ไม่บังคับ)</legend>
+          <input type="text" id="cakeMessage" maxlength="40" placeholder="เช่น Happy Birthday Tham 🎉">
+        </fieldset>
+      </div>
+      <div class="preview-cake">
+        <svg viewBox="0 0 120 100" aria-hidden="true">
+          <ellipse cx="60" cy="84" rx="46" ry="8" fill="#00000018"/>
+          <rect id="pvTier3" x="24" y="52" width="72" height="26" rx="3" fill="#D98C8C"/>
+          <rect id="pvTier2" x="30" y="30" width="60" height="24" rx="3" fill="#F3E7D8"/>
+          <rect id="pvTier1" x="38" y="12" width="44" height="20" rx="3" fill="#E39B9B"/>
+          <circle cx="60" cy="8" r="3.4" fill="#C98F2B"/>
+          <rect x="59" y="4" width="2" height="6" fill="#7E8F5E"/>
+        </svg>
+        <div class="ptotal" id="customPrice">159.00 บาท</div>
+        <div class="pnote" id="customNote">Chocolate · 1 ปอนด์ · ไม่มีท็อปปิ้ง</div>
+        <button class="btn block matcha" style="margin-top:14px" id="addCustomBtn">เพิ่มเค้กนี้ลงตะกร้า</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" data-view="best">
+    <h2 class="head">เมนูขายดี ⭐</h2>
+    <p class="sub">เมนูแนะนำที่ลูกค้าสั่งบ่อยที่สุดจากร้าน THAM CAFE</p>
+    <div class="grid" id="bestGrid"></div>
+  </section>
+
+  <section class="view" data-view="cart">
+    <h2 class="head">ตะกร้าสินค้า 🛒</h2>
+    <p class="sub">ตรวจสอบรายการก่อนไปชำระเงิน</p>
+    <div id="cartList"></div>
+    <div class="summary" id="cartSummary"></div>
+  </section>
+
+  <section class="view" data-view="member">
+    <h2 class="head">ระบบสมาชิก 👤</h2>
+    <p class="sub">สมัครสมาชิกเพื่อสะสมแต้มจากทุกการสั่งซื้อ (1 แต้ม ทุกๆ 10 บาท)</p>
+    <div id="memberArea"></div>
+  </section>
+
+  <section class="view" data-view="checkout">
+    <h2 class="head">ชำระเงิน 💳</h2>
+    <p class="sub">ระบบจะคำนวณส่วนลดและแต้มสะสมให้อัตโนมัติ</p>
+    <div id="checkoutArea"></div>
+  </section>
+
+  <section class="view" data-view="stats">
+    <h2 class="head">สถิติร้าน 📊</h2>
+    <p class="sub">ภาพรวมยอดขายของ THAM CAFE</p>
+    <div class="stat-grid">
+      <div class="stat"><div class="num" id="statOrders">0</div><div class="lbl">จำนวนออเดอร์</div></div>
+      <div class="stat"><div class="num" id="statSales">0.00</div><div class="lbl">ยอดขายรวม (บาท)</div></div>
+      <div class="stat"><div class="num" id="statAvg">0.00</div><div class="lbl">ยอดเฉลี่ย/ออเดอร์ (บาท)</div></div>
+    </div>
+    <h3 style="font-family:'Fraunces',serif; font-weight:560;">โปรโมชั่นของร้าน</h3>
+    <ul class="promo-list sub" style="padding-left:20px;">
+      <li>ซื้อครบ 300 บาท ลด 5%</li>
+      <li>ซื้อครบ 500 บาท ลด 10%</li>
+      <li>ซื้อครบ 1,000 บาท ลด 15%</li>
+      <li>คูปอง <strong>THAM10</strong> ลดเพิ่ม 10 บาท</li>
+    </ul>
+  </section>
+
+</div>
+
+<button class="fab" id="fabCart">🛒 ตะกร้า <span class="count" id="fabCount">0</span></button>
+<div class="toast" id="toast"></div>
+
+<footer>Theer Tham Cafe — Mini Project C# → Web App · โดย รัตนภรณ์ ตั้งปทุม และ คณธัช หุ่นเมืองปัก ปวช.2/7</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---------- data ----------
+  var products = [
+    {id:"p1", name:"Chocolate Cake", price:159, cat:"Cake", icon:"🍫"},
+    {id:"p2", name:"Strawberry Cake", price:189, cat:"Cake", icon:"🍓"},
+    {id:"p3", name:"Cheesecake", price:179, cat:"Cake", icon:"🧀"},
+    {id:"p4", name:"Matcha Cake", price:189, cat:"Cake", icon:"🍵"},
+    {id:"p5", name:"Blueberry Cake", price:199, cat:"Cake", icon:"🫐"},
+    {id:"p6", name:"Mango Cake", price:179, cat:"Cake", icon:"🥭"},
+    {id:"p7", name:"Americano", price:50, cat:"Drink", icon:"☕"},
+    {id:"p8", name:"Matcha Latte", price:65, cat:"Drink", icon:"🍵"},
+    {id:"p9", name:"Thai Tea", price:55, cat:"Drink", icon:"🧋"},
+    {id:"p10", name:"Strawberry Soda", price:55, cat:"Drink", icon:"🥤"}
+  ];
+  var bestSellerNames = ["Strawberry Cake","Matcha Cake","Chocolate Cake","Cheesecake","Matcha Latte"];
+
+  var flavors = [
+    {id:"choc", name:"Chocolate", price:159},
+    {id:"straw", name:"Strawberry", price:169},
+    {id:"matcha", name:"Matcha", price:169}
+  ];
+  var sizes = [
+    {id:"1lb", name:"1 ปอนด์", add:0},
+    {id:"2lb", name:"2 ปอนด์", add:80},
+    {id:"3lb", name:"3 ปอนด์", add:150}
+  ];
+  var toppings = [
+    {id:"straw", name:"Strawberry", add:20},
+    {id:"choc", name:"Chocolate", add:15},
+    {id:"cream", name:"Whipped Cream", add:10},
+    {id:"none", name:"ไม่มีท็อปปิ้ง", add:0}
+  ];
+
+  // ---------- state ----------
+  var state = {
+    cart: [],          // {key, name, unitPrice, qty, note}
+    member: {name:null, points:0},
+    stats: {orderCount:0, totalSales:0},
+    custom: {flavor:"choc", size:"1lb", topping:"none"},
+    appliedCoupon: null
+  };
+
+  function loadState(){
+    try{
+      var raw = localStorage.getItem("thamcafe_state_v1");
+      if(raw){
+        var parsed = JSON.parse(raw);
+        if(parsed.cart) state.cart = parsed.cart;
+        if(parsed.member) state.member = parsed.member;
+        if(parsed.stats) state.stats = parsed.stats;
+      }
+    }catch(e){ /* ignore, start fresh */ }
+  }
+  function saveState(){
+    try{
+      localStorage.setItem("thamcafe_state_v1", JSON.stringify({
+        cart: state.cart, member: state.member, stats: state.stats
+      }));
+    }catch(e){ /* storage unavailable, continue in-memory */ }
+  }
+
+  function money(n){ return n.toLocaleString("th-TH", {minimumFractionDigits:2, maximumFractionDigits:2}); }
+  function byId(id){ return document.getElementById(id); }
+
+  // ---------- toast ----------
+  var toastTimer;
+  function toast(msg){
+    var t = byId("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ t.classList.remove("show"); }, 1800);
+  }
+
+  // ---------- nav ----------
+  function showView(name){
+    document.querySelectorAll(".view").forEach(function(v){
+      v.classList.toggle("active", v.getAttribute("data-view") === name);
+    });
+    document.querySelectorAll("nav.tabs button").forEach(function(b){
+      b.classList.toggle("active", b.getAttribute("data-view") === name);
+    });
+    if(name === "checkout") renderCheckout();
+    if(name === "cart") renderCart();
+    if(name === "member") renderMember();
+    if(name === "stats") renderStats();
+    window.scrollTo({top:0, behavior:"instant" in window ? "instant" : "auto"});
+  }
+  document.querySelectorAll("nav.tabs button").forEach(function(b){
+    b.addEventListener("click", function(){ showView(b.getAttribute("data-view")); });
+  });
+  byId("fabCart").addEventListener("click", function(){ showView("cart"); });
+
+  // ---------- cart ops ----------
+  function addToCart(key, name, unitPrice, qty, note){
+    qty = qty || 1;
+    var existing = state.cart.find(function(i){ return i.key === key; });
+    if(existing){ existing.qty += qty; }
+    else{ state.cart.push({key:key, name:name, unitPrice:unitPrice, qty:qty, note:note||""}); }
+    saveState();
+    renderCartCount();
+  }
+  function removeFromCart(key){
+    state.cart = state.cart.filter(function(i){ return i.key !== key; });
+    saveState();
+    renderCart();
+    renderCartCount();
+  }
+  function setQty(key, qty){
+    var item = state.cart.find(function(i){ return i.key === key; });
+    if(!item) return;
+    item.qty = Math.max(1, qty);
+    saveState();
+    renderCart();
+    renderCartCount();
+  }
+  function cartSubtotal(){
+    return state.cart.reduce(function(s,i){ return s + i.unitPrice * i.qty; }, 0);
+  }
+  function renderCartCount(){
+    var count = state.cart.reduce(function(s,i){ return s + i.qty; }, 0);
+    byId("fabCount").textContent = count;
+  }
+
+  // ---------- render: cake / drink grids ----------
+  function productCard(p){
+    var div = document.createElement("div");
+    div.className = "card";
+    div.innerHTML =
+      '<div class="icon">' + p.icon + '</div>' +
+      '<h3>' + p.name + '</h3>' +
+      '<div class="price">' + money(p.price) + ' บาท</div>' +
+      '<div class="cat">' + (p.cat === "Cake" ? "เค้ก" : "เครื่องดื่ม") + '</div>' +
+      '<div class="qtyrow">' +
+        '<div class="stepper">' +
+          '<button type="button" class="dec">−</button>' +
+          '<span class="qtyval">1</span>' +
+          '<button type="button" class="inc">+</button>' +
+        '</div>' +
+        '<button type="button" class="btn add" style="margin-left:auto">เพิ่ม</button>' +
+      '</div>';
+    var qtyEl = div.querySelector(".qtyval");
+    var qty = 1;
+    div.querySelector(".dec").addEventListener("click", function(){
+      qty = Math.max(1, qty - 1); qtyEl.textContent = qty;
+    });
+    div.querySelector(".inc").addEventListener("click", function(){
+      qty = qty + 1; qtyEl.textContent = qty;
+    });
+    div.querySelector(".add").addEventListener("click", function(){
+      addToCart(p.id, p.name, p.price, qty);
+      toast(p.name + " x" + qty + " ถูกเพิ่มลงตะกร้าแล้ว ✅");
+      qty = 1; qtyEl.textContent = qty;
+    });
+    return div;
+  }
+
+  function renderGrids(){
+    var cakeGrid = byId("cakeGrid");
+    var drinkGrid = byId("drinkGrid");
+    products.filter(function(p){ return p.cat === "Cake"; }).forEach(function(p){ cakeGrid.appendChild(productCard(p)); });
+    products.filter(function(p){ return p.cat === "Drink"; }).forEach(function(p){ drinkGrid.appendChild(productCard(p)); });
+
+    var bestGrid = byId("bestGrid");
+    bestSellerNames.forEach(function(name, idx){
+      var p = products.find(function(x){ return x.name === name; });
+      if(!p) return;
+      var medal = ["🥇","🥈","🥉","⭐","🔥"][idx] || "⭐";
+      var div = document.createElement("div");
+      div.className = "card";
+      div.innerHTML =
+        '<div class="icon">' + medal + ' ' + p.icon + '</div>' +
+        '<h3>' + p.name + '</h3>' +
+        '<div class="price">' + money(p.price) + ' บาท</div>' +
+        '<div class="cat">เมนูแนะนำจากร้าน</div>' +
+        '<button type="button" class="btn block" style="margin-top:6px;">เพิ่มลงตะกร้า</button>';
+      div.querySelector("button").addEventListener("click", function(){
+        addToCart(p.id, p.name, p.price, 1);
+        toast(p.name + " ถูกเพิ่มลงตะกร้าแล้ว ✅");
+      });
+      bestGrid.appendChild(div);
+    });
+  }
+
+  // ---------- custom cake ----------
+  function optionGroup(container, items, groupName, selectedId, onChange){
+    container.innerHTML = "";
+    items.forEach(function(it){
+      var label = document.createElement("label");
+      label.className = "opt";
+      var priceLabel = it.price !== undefined
+        ? money(it.price) + " บาท"
+        : (it.add === 0 ? "+0 บาท" : "+" + money(it.add) + " บาท");
+      label.innerHTML =
+        '<input type="radio" name="' + groupName + '" value="' + it.id + '" ' + (it.id === selectedId ? "checked" : "") + '>' +
+        '<span class="oname">' + it.name + '</span>' +
+        '<span class="oprice">' + priceLabel + '</span>';
+      label.querySelector("input").addEventListener("change", function(){ onChange(it.id); });
+      container.appendChild(label);
+    });
+  }
+
+  var tierColors = {
+    choc:"#8B5A2B", straw:"#E39B9B", matcha:"#7E8F5E"
+  };
+
+  function updateCustomPreview(){
+    var flavor = flavors.find(function(f){ return f.id === state.custom.flavor; });
+    var size = sizes.find(function(s){ return s.id === state.custom.size; });
+    var topping = toppings.find(function(t){ return t.id === state.custom.topping; });
+    var total = flavor.price + size.add + topping.add;
+    byId("customPrice").textContent = money(total) + " บาท";
+    byId("customNote").textContent = flavor.name + " · " + size.name + " · " + topping.name;
+    var color = tierColors[flavor.id] || "#D98C8C";
+    byId("pvTier3").setAttribute("fill", color);
+    byId("pvTier1").setAttribute("fill", topping.id === "none" ? "#F3E7D8" : "#E8B23C");
+    return {flavor:flavor, size:size, topping:topping, total:total};
+  }
+
+  function initCustomCake(){
+    optionGroup(byId("flavorOpts"), flavors, "flavor", state.custom.flavor, function(id){ state.custom.flavor = id; updateCustomPreview(); });
+    optionGroup(byId("sizeOpts"), sizes, "size", state.custom.size, function(id){ state.custom.size = id; updateCustomPreview(); });
+    optionGroup(byId("toppingOpts"), toppings, "topping", state.custom.topping, function(id){ state.custom.topping = id; updateCustomPreview(); });
+    updateCustomPreview();
+
+    byId("addCustomBtn").addEventListener("click", function(){
+      var d = updateCustomPreview();
+      var msg = byId("cakeMessage").value.trim();
+      var name = "Custom " + d.flavor.name + " Cake (" + d.size.name + ", " + d.topping.name + ")";
+      var key = "custom-" + d.flavor.id + "-" + d.size.id + "-" + d.topping.id + "-" + msg + "-" + Date.now();
+      addToCart(key, name, d.total, 1, msg ? ("ข้อความบนเค้ก: " + msg) : "");
+      toast("เพิ่ม " + name + " ลงตะกร้าแล้ว 🎂");
+      byId("cakeMessage").value = "";
+    });
+  }
+
+  // ---------- cart view ----------
+  function renderCart(){
+    var list = byId("cartList");
+    var summary = byId("cartSummary");
+    list.innerHTML = "";
+    if(state.cart.length === 0){
+      list.innerHTML = '<div class="empty">ตะกร้ายังว่างอยู่ 🥺<br>ไปเลือกเค้กหรือเครื่องดื่มที่ชอบกันเถอะ</div>';
+      summary.innerHTML = "";
+      return;
+    }
+    state.cart.forEach(function(item){
+      var row = document.createElement("div");
+      row.className = "cart-row";
+      row.innerHTML =
+        '<div>' +
+          '<div class="name">' + item.name + '</div>' +
+          '<div class="unit">' + money(item.unitPrice) + ' บาท / ชิ้น' + (item.note ? " · " + item.note : "") + '</div>' +
+        '</div>' +
+        '<div class="stepper">' +
+          '<button type="button" class="dec">−</button>' +
+          '<span>' + item.qty + '</span>' +
+          '<button type="button" class="inc">+</button>' +
+        '</div>' +
+        '<div class="line-total">' + money(item.unitPrice * item.qty) + '</div>' +
+        '<button type="button" class="remove" aria-label="ลบ">✕</button>';
+      row.querySelector(".dec").addEventListener("click", function(){ setQty(item.key, item.qty - 1); });
+      row.querySelector(".inc").addEventListener("click", function(){ setQty(item.key, item.qty + 1); });
+      row.querySelector(".remove").addEventListener("click", function(){
+        removeFromCart(item.key);
+        toast("ลบ " + item.name + " แล้ว");
+      });
+      list.appendChild(row);
+    });
+    var subtotal = cartSubtotal();
+    var discountInfo = discountFor(subtotal);
+    summary.innerHTML =
+      '<div class="row"><span>ยอดรวม</span><span>' + money(subtotal) + ' บาท</span></div>' +
+      '<div class="row"><span>ส่วนลด (' + (discountInfo.pct*100) + '%)</span><span>−' + money(discountInfo.amount) + ' บาท</span></div>' +
+      '<div class="row total"><span>ยอดสุทธิ</span><span>' + money(subtotal - discountInfo.amount) + ' บาท</span></div>' +
+      '<button class="btn block matcha" id="goCheckout" style="margin-top:14px;">ไปชำระเงิน</button>';
+    byId("goCheckout").addEventListener("click", function(){ showView("checkout"); });
+  }
+
+  function discountFor(subtotal){
+    var pct = 0;
+    if(subtotal >= 1000) pct = 0.15;
+    else if(subtotal >= 500) pct = 0.10;
+    else if(subtotal >= 300) pct = 0.05;
+    return {pct:pct, amount: subtotal * pct};
+  }
+
+  // ---------- member ----------
+  function memberTier(points){
+    if(points >= 100) return {label:"GOLD", icon:"👑"};
+    if(points >= 50) return {label:"SILVER", icon:"⭐"};
+    return {label:"MEMBER", icon:"🥉"};
+  }
+  function renderMemberChip(){
+    var chip = byId("memberChip");
+    if(state.member.name){
+      var tier = memberTier(state.member.points);
+      chip.innerHTML = tier.icon + " " + state.member.name + " · <b>" + state.member.points + " pt</b>";
+    }else{
+      chip.textContent = "👤 ยังไม่สมัครสมาชิก";
+    }
+  }
+  function renderMember(){
+    var area = byId("memberArea");
+    if(!state.member.name){
+      area.innerHTML =
+        '<div class="form-row">' +
+          '<input type="text" id="memberNameInput" placeholder="ชื่อสมาชิก">' +
+          '<button class="btn" id="joinBtn">สมัครสมาชิก</button>' +
+          '<div class="msg-error" id="memberMsg"></div>' +
+        '</div>';
+      byId("joinBtn").addEventListener("click", function(){
+        var name = byId("memberNameInput").value.trim();
+        if(!name){
+          byId("memberMsg").textContent = "กรุณากรอกชื่อสมาชิก";
+          return;
+        }
+        state.member = {name:name, points:0};
+        saveState();
+        renderMember();
+        renderMemberChip();
+        toast("สมัครสมาชิกสำเร็จ 🎉 ยินดีต้อนรับคุณ " + name);
+      });
+      return;
+    }
+    var tier = memberTier(state.member.points);
+    var next = tier.label === "GOLD" ? null : (tier.label === "SILVER" ? 100 : 50);
+    var pct = next ? Math.min(100, Math.round(state.member.points / next * 100)) : 100;
+    area.innerHTML =
+      '<div class="member-card">' +
+        '<div style="font-size:0.8rem; opacity:0.7;">สมาชิก</div>' +
+        '<div class="tier">' + state.member.name + '</div>' +
+        '<div class="pts">' + tier.icon + ' ' + tier.label + '</div>' +
+        '<div style="margin-top:10px; font-size:0.85rem; opacity:0.85;">คะแนนสะสม: ' + state.member.points + ' points</div>' +
+        '<div class="bar"><i style="width:' + pct + '%"></i></div>' +
+        '<div style="font-size:0.75rem; opacity:0.7;">' + (next ? ("อีก " + Math.max(0,next-state.member.points) + " แต้ม สู่ระดับถัดไป") : "ระดับสูงสุดแล้ว 🎉") + '</div>' +
+      '</div>' +
+      '<button class="btn ghost" id="logoutMember" style="margin-top:16px;">ออกจากระบบสมาชิก</button>';
+    byId("logoutMember").addEventListener("click", function(){
+      state.member = {name:null, points:0};
+      saveState();
+      renderMember();
+      renderMemberChip();
+    });
+  }
+
+  // ---------- checkout ----------
+  function renderCheckout(){
+    var area = byId("checkoutArea");
+    if(state.cart.length === 0){
+      area.innerHTML = '<div class="empty">ยังไม่มีสินค้าในตะกร้า กรุณาเลือกสินค้าก่อนชำระเงิน</div>';
+      return;
+    }
+    var subtotal = cartSubtotal();
+    var d = discountFor(subtotal);
+    var couponAmt = state.appliedCoupon === "THAM10" ? 10 : 0;
+    var total = Math.max(0, subtotal - d.amount - couponAmt);
+
+    area.innerHTML =
+      '<div class="summary" style="border-top:none; padding-top:0;">' +
+        '<div class="row"><span>ยอดสินค้า</span><span>' + money(subtotal) + ' บาท</span></div>' +
+        '<div class="row"><span>ส่วนลดโปรโมชั่น (' + (d.pct*100) + '%)</span><span>−' + money(d.amount) + ' บาท</span></div>' +
+        '<div class="row"><span>คูปอง' + (state.appliedCoupon ? " (" + state.appliedCoupon + ")" : "") + '</span><span>−' + money(couponAmt) + ' บาท</span></div>' +
+        '<div class="row total"><span>ยอดชำระสุทธิ</span><span id="netTotal">' + money(total) + ' บาท</span></div>' +
+      '</div>' +
+      '<div class="form-row" style="margin-top:18px;">' +
+        '<label style="font-size:0.85rem; font-weight:600;">รหัสคูปอง (ถ้ามี)</label>' +
+        '<div style="display:flex; gap:8px;">' +
+          '<input type="text" id="couponInput" placeholder="เช่น THAM10" style="flex:1;">' +
+          '<button class="btn ghost" id="applyCoupon">ใช้คูปอง</button>' +
+        '</div>' +
+        '<div class="msg-error" id="couponMsg"></div>' +
+      '</div>' +
+      '<div class="form-row" style="margin-top:14px;">' +
+        '<label style="font-size:0.85rem; font-weight:600;">รับเงินจากลูกค้า (บาท)</label>' +
+        '<input type="number" id="cashInput" min="0" step="1" placeholder="0">' +
+        '<div class="msg-error" id="payMsg"></div>' +
+      '</div>' +
+      '<button class="btn matcha block" id="confirmPay" style="margin-top:6px;">ยืนยันชำระเงิน</button>';
+
+    byId("applyCoupon").addEventListener("click", function(){
+      var code = byId("couponInput").value.trim().toUpperCase();
+      var msg = byId("couponMsg");
+      if(!code){ msg.textContent = "กรุณากรอกรหัสคูปอง"; msg.className="msg-error"; return; }
+      if(code === "THAM10"){
+        state.appliedCoupon = "THAM10";
+        msg.textContent = "ใช้คูปองสำเร็จ 🎉 ลดเพิ่ม 10 บาท";
+        msg.className = "msg-ok";
+      }else{
+        state.appliedCoupon = null;
+        msg.textContent = "คูปองไม่ถูกต้อง";
+        msg.className = "msg-error";
+      }
+      renderCheckout();
+    });
+
+    byId("confirmPay").addEventListener("click", function(){
+      var cash = parseFloat(byId("cashInput").value);
+      var payMsg = byId("payMsg");
+      if(isNaN(cash)){ payMsg.textContent = "กรุณาระบุจำนวนเงินที่รับมา"; return; }
+      var currentSubtotal = cartSubtotal();
+      var dd = discountFor(currentSubtotal);
+      var cAmt = state.appliedCoupon === "THAM10" ? 10 : 0;
+      var netTotal = Math.max(0, currentSubtotal - dd.amount - cAmt);
+      if(cash < netTotal){ payMsg.textContent = "เงินไม่พอสำหรับชำระสินค้า"; return; }
+
+      var change = cash - netTotal;
+      var earnedPoint = Math.floor(netTotal / 10);
+      state.stats.orderCount += 1;
+      state.stats.totalSales += netTotal;
+      if(state.member.name){ state.member.points += earnedPoint; }
+
+      renderReceipt({
+        items: state.cart.slice(),
+        subtotal: currentSubtotal,
+        discount: dd.amount,
+        coupon: cAmt,
+        total: netTotal,
+        cash: cash,
+        change: change,
+        point: earnedPoint,
+        member: state.member.name
+      });
+
+      state.cart = [];
+      state.appliedCoupon = null;
+      saveState();
+      renderCartCount();
+      renderMemberChip();
+      byId("chipOrders").textContent = state.stats.orderCount;
+    });
+  }
+
+  function renderReceipt(r){
+    var area = byId("checkoutArea");
+    var itemsHtml = r.items.map(function(i){
+      return '<div class="rrow"><span>' + i.name + ' x' + i.qty + '</span><span>' + money(i.unitPrice*i.qty) + '</span></div>';
+    }).join("");
+    area.innerHTML =
+      '<div class="receipt">' +
+        '<h3>Theer THAM CAFE</h3>' +
+        '<div class="tag">คาเฟ่ธาม — ใบเสร็จรับเงิน</div>' +
+        '<hr>' +
+        itemsHtml +
+        '<hr>' +
+        '<div class="rrow"><span>ยอดรวม</span><span>' + money(r.subtotal) + '</span></div>' +
+        '<div class="rrow"><span>ส่วนลด</span><span>−' + money(r.discount) + '</span></div>' +
+        (r.coupon ? '<div class="rrow"><span>คูปอง</span><span>−' + money(r.coupon) + '</span></div>' : '') +
+        '<div class="rrow" style="font-weight:700;"><span>ยอดชำระสุทธิ</span><span>' + money(r.total) + '</span></div>' +
+        '<div class="rrow"><span>รับเงิน</span><span>' + money(r.cash) + '</span></div>' +
+        '<div class="rrow"><span>เงินทอน</span><span>' + money(r.change) + '</span></div>' +
+        (r.member ? '<div class="rrow"><span>สมาชิก</span><span>' + r.member + '</span></div>' : '') +
+        '<div class="rrow"><span>คะแนนที่ได้รับ</span><span>+' + r.point + '</span></div>' +
+        '<hr>' +
+        '<div class="thanks">ขอบคุณที่ใช้บริการ 💗<br>THAM CAFE</div>' +
+      '</div>' +
+      '<button class="btn block" id="newOrder" style="margin-top:18px; max-width:340px; margin-left:auto; margin-right:auto; display:block;">เริ่มออเดอร์ใหม่</button>';
+    byId("newOrder").addEventListener("click", function(){ showView("cakes"); });
+  }
+
+  // ---------- stats ----------
+  function renderStats(){
+    byId("statOrders").textContent = state.stats.orderCount;
+    byId("statSales").textContent = money(state.stats.totalSales);
+    var avg = state.stats.orderCount > 0 ? state.stats.totalSales / state.stats.orderCount : 0;
+    byId("statAvg").textContent = money(avg);
+    byId("chipOrders").textContent = state.stats.orderCount;
+  }
+
+  // ---------- init ----------
+  loadState();
+  renderGrids();
+  initCustomCake();
+  renderCartCount();
+  renderMemberChip();
+  renderCart();
+  renderStats();
+})();
+</script>
+</body>
+</html>
